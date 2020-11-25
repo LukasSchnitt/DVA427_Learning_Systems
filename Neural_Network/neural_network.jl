@@ -87,6 +87,7 @@ for epochs = 1:5
     global nwho, nwhi = train(norm_data[1:865,:], nwhi, nwho, learningrate)
 end
 
-query(norm_data[1150,:][1:19], norm_data[1150,20], nwhi, nwho)
-query(norm_data[1151,:][1:19], norm_data[1151,20], nwhi, nwho)
+#query(norm_data[1009,:][1:19], norm_data[1009,20], nwhi, nwho)
+#query(norm_data[1150,:][1:19], norm_data[1150,20], nwhi, nwho)
 #println(predict_probability(norm_data[1150,:][1:19]))
+names(Distribution)
