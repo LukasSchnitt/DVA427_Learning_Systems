@@ -16,7 +16,7 @@ end
 function relu_derivation(x)
     if x < 0
         return 0
-    elseif x > 0
+    elseif x >= 0
         return 1
     end
 end
@@ -31,7 +31,7 @@ function feed_forward(input, weights_input, weights_output)
     return hidden_out, final_out
 end
 
-function train(data, weights_input, weights_output, alpha, activation, derivation)
+function train(data, weights_input, weights_output, alpha)
     for i = 1:size(data)[1]
         input = data[i,:][1:19]
         hidden_out, final_out = feed_forward(input, weights_input, weights_output)
@@ -69,8 +69,8 @@ end
 
 inputnodes = 19
 outputnodes = 1
-hiddennodes = 100
-learningrate = 0.05
+hiddennodes = 75
+learningrate = 0.01
 
 #Outputnodes = First Node is Class 0, Second Node is Class 1
 
@@ -83,10 +83,10 @@ norm_data = normalization(copy(data))
 nwhi =  weights_ih
 nwho = weights_ho
 
-for epochs = 1:6
+for epochs = 1:5
     global nwho, nwhi = train(norm_data[1:865,:], nwhi, nwho, learningrate)
 end
 
-#query(norm_data[1150,:][1:19], norm_data[1150,20], nwhi, nwho)
-#query(norm_data[1151,:][1:19], norm_data[1151,20], nwhi, nwho)
-println(predict_probability(norm_data[1150,:][1:19]))
+query(norm_data[1150,:][1:19], norm_data[1150,20], nwhi, nwho)
+query(norm_data[1151,:][1:19], norm_data[1151,20], nwhi, nwho)
+#println(predict_probability(norm_data[1150,:][1:19]))
