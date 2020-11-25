@@ -1,16 +1,6 @@
 using LinearAlgebra, Distributions
 include("FileInput.jl")
 
-inputnodes = 19
-outputnodes = 2
-hiddennodes = 110
-learningrate = 0.1
-
-#Outputnodes = First Node is Class 0, Second Node is Class 1
-
-weights_ih = rand(Uniform(-1/(hiddennodes^0.5), 1/(hiddennodes^0.5)),hiddennodes,inputnodes)
-weights_ho = rand(Uniform(-1/(outputnodes^0.5), 1/(outputnodes^0.5)),outputnodes,hiddennodes)
-
 function sigmoid(x)
     return 1/(1+exp(-x))
 end
@@ -18,7 +8,6 @@ end
 function sigmoid_derivation(x)
     return sigmoid(x)*(1-sigmoid(x))
 end
-
 
 function feed_forward(input, weights_input, weights_output)
     hidden_input = weights_input * input
@@ -56,9 +45,25 @@ end
 function query(input, class, wih, who)
     hidden_out, final_out = feed_forward(input, wih, who)
     println("class is ", Int(class))
-    println("Accurancy for class 0 is ", final_out[1])
-    println("Accurancy for class 1 is ", final_out[2])
+    println("Accuracy for class 0 is ", final_out[1])
+    println("Accuracy for class 1 is ", final_out[2])
 end
+
+function predict_probability(input, weights_ih, weights_ho)
+    hidden_out, final_out = feed_forward(input, weights_ih, weights_ho)
+    return final_out
+end
+
+
+inputnodes = 19
+outputnodes = 2
+hiddennodes = 100
+learningrate = 0.05
+
+#Outputnodes = First Node is Class 0, Second Node is Class 1
+
+weights_ih = rand(Uniform(-1/(hiddennodes^0.5), 1/(hiddennodes^0.5)),hiddennodes,inputnodes)
+weights_ho = rand(Uniform(-1/(outputnodes^0.5), 1/(outputnodes^0.5)),outputnodes,hiddennodes)
 
 data = readdlm("Diabetic.txt", ',', Float32, '\n', skipstart = 24)
 norm_data = normalization(copy(data))
@@ -66,11 +71,9 @@ norm_data = normalization(copy(data))
 nwhi =  weights_ih
 nwho = weights_ho
 
-#query(norm_data[2,:][1:19], norm_data[2,20], weights_ih, weights_ho)
-println(size(norm_data))
-for i = 1:6
+for epochs = 1:6
     global nwho, nwhi = train(norm_data[1:864,:], nwhi, nwho, learningrate)
 end
 
-query(norm_data[1150,:][1:19], norm_data[1150,20], nwhi, nwho)
-query(norm_data[1151,:][1:19], norm_data[1151,20], nwhi, nwho)
+#query(norm_data[1150,:][1:19], norm_data[1150,20], nwhi, nwho)
+#query(norm_data[1151,:][1:19], norm_data[1151,20], nwhi, nwho)
